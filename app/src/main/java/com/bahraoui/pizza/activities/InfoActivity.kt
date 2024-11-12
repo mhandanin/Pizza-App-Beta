@@ -2,6 +2,8 @@ package com.bahraoui.pizza.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.GridView
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,6 +15,7 @@ import com.bahraoui.pizza.listPizza
 
 
 class InfoActivity : AppCompatActivity() {
+    private var recuperIntent: Int? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -22,18 +25,41 @@ class InfoActivity : AppCompatActivity() {
         supportActionBar?.title = "Pizza Mhandanin"
         supportActionBar?.setBackgroundDrawable(resources.getDrawable(R.color.UltraLightGrey))
         supportActionBar?.setIcon(R.drawable.pizza_slice)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         var pizzaImage = findViewById<ImageView>(R.id.pizzaImage)
         var pizzaName = findViewById<TextView>(R.id.pizzaName)
         var descriptionContent = findViewById<TextView>(R.id.descriptionContent)
         var ingredientContent = findViewById<TextView>(R.id.ingredientContent)
 
-        var recuperIntent = intent?.extras?.getInt("pizza")
-
+        recuperIntent = intent?.extras?.getInt("pizza")
         pizzaImage.setImageResource(listPizza[recuperIntent!!].image)
-        pizzaName.text = listPizza[recuperIntent].name
-        descriptionContent.text = listPizza[recuperIntent].description
-        ingredientContent.text = listPizza[recuperIntent].ingredients.joinToString("\n")
+        pizzaName.text = listPizza[recuperIntent!!].name
+        descriptionContent.text = listPizza[recuperIntent!!].description
+        ingredientContent.text = listPizza[recuperIntent!!].ingredients.joinToString("\n")
 
 
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.pizzainfo_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.partager) {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+
+                putExtra(Intent.EXTRA_TITLE, listPizza[recuperIntent!!].name)
+                putExtra(Intent.EXTRA_TEXT, listPizza[recuperIntent!!].description)
+                putExtra(Intent.EXTRA_STREAM, listPizza[recuperIntent!!].image)
+                type = "text/plain"
+            }
+
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
