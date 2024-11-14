@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import com.bahraoui.pizza.Pizza
+import com.bahraoui.pizza.pizzalistsANDclass.Pizza
 import com.bahraoui.pizza.R
 
 class pizzaGridAdabter(var context: Context, var listPizza: List<Pizza>):BaseAdapter() {
